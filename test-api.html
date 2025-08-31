@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cleverence API Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Cleverence API Test</h1>
+        <p>Тестирование API сервера Cleverence Documentation</p>
+
+        <div class="test-section">
+            <h3>1. Корневой эндпоинт</h3>
+            <button onclick="testRoot()">Тест корневого эндпоинта</button>
+            <div id="root-result" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>2. Статистика</h3>
+            <button onclick="testStatistics()">Получить статистику</button>
+            <div id="stats-result" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>3. Поиск</h3>
+            <input type="text" id="search-query" value="cleverence" placeholder="Поисковый запрос">
+            <button onclick="testSearch()">Поиск</button>
+            <div id="search-result" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>4. Получение главы</h3>
+            <input type="number" id="chapter-id" value="1" placeholder="ID главы">
+            <button onclick="testGetChapter()">Получить главу</button>
+            <div id="chapter-result" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>5. Список глав</h3>
+            <input type="number" id="chapters-limit" value="5" placeholder="Лимит">
+            <button onclick="testGetChapters()">Получить список глав</button>
+            <div id="chapters-result" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>6. Информация о документе</h3>
+            <button onclick="testDocumentInfo()">Получить информацию о документе</button>
+            <div id="doc-info-result" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const BASE_URL = 'http://localhost:3001';
+
+        async function makeRequest(url, options = {}) {
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...options.headers
+                    },
+                    ...options
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                throw new Error(`Request failed: ${error.message}`);
+            }
+        }
+
+        function displayResult(elementId, data, isError = false) {
+            const element = document.getElementById(elementId);
+            element.className = `result ${isError ? 'error' : 'success'}`;
+            element.textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function testRoot() {
+            try {
+                const result = await makeRequest(`${BASE_URL}/`);
+                displayResult('root-result', result);
+            } catch (error) {
+                displayResult('root-result', { error: error.message }, true);
+            }
+        }
+
+        async function testStatistics() {
+            try {
+                const result = await makeRequest(`${BASE_URL}/api/statistics`);
+                displayResult('stats-result', result);
+            } catch (error) {
+                displayResult('stats-result', { error: error.message }, true);
+            }
+        }
+
+        async function testSearch() {
+            try {
+                const query = document.getElementById('search-query').value;
+                const result = await makeRequest(`${BASE_URL}/api/search?query=${encodeURIComponent(query)}`);
+                displayResult('search-result', result);
+            } catch (error) {
+                displayResult('search-result', { error: error.message }, true);
+            }
+        }
+
+        async function testGetChapter() {
+            try {
+                const chapterId = document.getElementById('chapter-id').value;
+                const result = await makeRequest(`${BASE_URL}/api/chapter/${chapterId}`);
+                displayResult('chapter-result', result);
+            } catch (error) {
+                displayResult('chapter-result', { error: error.message }, true);
+            }
+        }
+
+        async function testGetChapters() {
+            try {
+                const limit = document.getElementById('chapters-limit').value;
+                const result = await makeRequest(`${BASE_URL}/api/chapters?limit=${limit}`);
+                displayResult('chapters-result', result);
+            } catch (error) {
+                displayResult('chapters-result', { error: error.message }, true);
+            }
+        }
+
+        async function testDocumentInfo() {
+            try {
+                const result = await makeRequest(`${BASE_URL}/api/document-info`);
+                displayResult('doc-info-result', result);
+            } catch (error) {
+                displayResult('doc-info-result', { error: error.message }, true);
+            }
+        }
+
+        // Автоматически тестируем корневой эндпоинт при загрузке страницы
+        window.onload = function() {
+            testRoot();
+        };
+    </script>
+</body>
+</html>

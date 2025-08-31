@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "cleverence-docs": {
+      "command": "node",
+      "args": ["C:\\Users\\augibizov\\vibe\\MCP-RAGcleverence\\src\\server.js"],
+      "env": {
+        "NODE_ENV": "production"
+      }
+    }
+  }
+}
