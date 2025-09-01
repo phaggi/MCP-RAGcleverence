@@ -10,15 +10,16 @@ const __dirname = path.dirname(__filename);
 async function testMCPServer() {
   console.log('🧪 Тестирование MCP сервера...\n');
 
-  // Запускаем MCP сервер как дочерний процесс
-  const serverProcess = spawn('node', ['src/server.js'], {
-    cwd: __dirname,
-    stdio: ['pipe', 'pipe', 'pipe']
+  // Создаем клиент и транспорт, который сам запустит сервер
+  const client = new Client({
+    name: 'mcp-test-client',
+    version: '1.0.0'
   });
-
-  // Создаем транспорт для связи с сервером
-  const transport = new StdioClientTransport(serverProcess.stdin, serverProcess.stdout);
-  const client = new Client(transport);
+  const transport = new StdioClientTransport({
+    command: 'node',
+    args: ['src/server.js'],
+    cwd: __dirname
+  });
 
   try {
     // Инициализируем соединение
@@ -45,23 +46,22 @@ async function testMCPServer() {
 
     // Тестируем поиск
     console.log('🔍 Тестирование поиска...');
-    const searchResult = await client.callTool('search_documentation', {
-      query: 'cleverence'
+    const searchResult = await client.callTool({
+      name: 'search_documentation',
+      arguments: { query: 'cleverence' }
     });
     console.log(`Найдено результатов: ${searchResult.content.length}`);
     console.log('');
 
     // Тестируем получение статистики
     console.log('📊 Тестирование статистики...');
-    const statsResult = await client.callTool('get_statistics', {});
+    const statsResult = await client.callTool({ name: 'get_statistics', arguments: {} });
     console.log('Статистика:', JSON.stringify(statsResult.content, null, 2));
     console.log('');
 
     // Тестируем получение главы
     console.log('📖 Тестирование получения главы...');
-    const chapterResult = await client.callTool('get_chapter', {
-      chapter_id: 1
-    });
+    const chapterResult = await client.callTool({ name: 'get_chapter', arguments: { chapter_id: 1 } });
     console.log('Глава 1 получена успешно');
     console.log('');
 
@@ -70,8 +70,6 @@ async function testMCPServer() {
   } catch (error) {
     console.error('❌ Ошибка тестирования MCP сервера:', error);
   } finally {
-    // Завершаем процесс сервера
-    serverProcess.kill();
     await client.close();
   }
 }

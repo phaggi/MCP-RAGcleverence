@@ -99,5 +99,11 @@ logs
 tmp/
 temp/
 
+# Archive directory
+archive/
+
+# Test output files
+test-*-output*.txt
+
 # Database files (optional - можно включить если нужно версионировать данные)
 # db/

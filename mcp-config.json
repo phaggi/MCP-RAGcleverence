@@ -2,7 +2,7 @@
   "mcpServers": {
     "cleverence-docs": {
       "command": "node",
-      "args": ["C:\\Users\\augibizov\\vibe\\MCP-RAGcleverence\\src\\server.js"],
+      "args": ["C:\\Users\\augibizov\\vibe\\MCP-RAGcleverence\\src\\server-vector.js"],
       "env": {
         "NODE_ENV": "production"
       }
