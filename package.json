@@ -11,7 +11,9 @@
     "api": "node src/api.js",
     "test": "node src/test.js",
     "test-api": "node test-api.js",
-    "test-api-simple": "node test-api-simple.js"
+    "test-api-simple": "node test-api-simple.js",
+    "generate-embeddings": "node src/generate-embeddings.js",
+    "setup-vector-db": "node src/setup-vector-db.js"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^0.4.0",
@@ -28,9 +30,11 @@
     "rag",
     "cleverence",
     "documentation",
-    "json"
+    "json",
+    "vector",
+    "embeddings",
+    "agent"
   ],
   "author": "Cleverence Team",
   "license": "MIT"
 }
-

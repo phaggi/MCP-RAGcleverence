@@ -107,3 +107,14 @@ test-*-output*.txt
 
 # Database files (optional - можно включить если нужно версионировать данные)
 # db/
+
+%USERPROFILE%/
+%USERPROFILE%/*
+%USERPROFILE%/*/*
+%USERPROFILE%/*/*/*
+%USERPROFILE%/*/*/*/*
+%USERPROFILE%/*/*/*/*/*
+%USERPROFILE%/*/*/*/*/*/*
+%USERPROFILE%/*/*/*/*/*/*/*
+%USERPROFILE%/*/*/*/*/*/*/*/*
+tests/

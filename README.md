@@ -1,4 +1,4 @@
-# Cleverence MCP-RAG Server
+# Cleverence MCP-RAG Server v.001
 
 MCP-RAG сервер для работы с документацией Cleverence Mobile Smarts. Позволяет искать и получать информацию из документации через стандартизированный MCP интерфейс и HTTP API.
 
